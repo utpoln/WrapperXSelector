@@ -26,7 +26,7 @@ def setTableWrapper(url,wrapper_name='no_name'):
         create_directory()
     except PermissionDeniedError as e:
         #print(e)
-        return False, None, None, str(e)
+        return False, None, None, None, str(e)
         
     try:
         service = Service(executable_path=ChromeDriverManager().install())
@@ -95,20 +95,20 @@ def setTableWrapper(url,wrapper_name='no_name'):
         with open(wrapper_path, 'w') as json_file:
             json.dump(wrapper_list, json_file)
 
-        return True, unique_wrapper_name, None, None
+        return True, unique_wrapper_name, None, None, None
         
     except Exception as error:
         error_code = 100
         error_type = type(error).__name__
         error_message = str(error)
-        return False, error_code, error_type, error_message
+        return False, None, error_code, error_type, error_message
 
 def setGeneralWrapper(url,wrapper_name='no_name',repeat='no'):
     try:
         create_directory()
     except PermissionDeniedError as e:
         #print(e)
-        return False, None, None, str(e)
+        return False, None, None, None, str(e)
     try:
         service = Service(executable_path=ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
@@ -186,15 +186,15 @@ def setGeneralWrapper(url,wrapper_name='no_name',repeat='no'):
         with open(wrapper_path, 'w') as json_file:
             json.dump(wrapper_list, json_file)
 
-        return True, unique_wrapper_name, None, None
+        return True, unique_wrapper_name, None, None, None
         
     except Exception as error:
         error_code = 100
         error_type = type(error).__name__
         error_message = str(error)
-        return False, error_code, error_type, error_message
+        return False, None, error_code, error_type, error_message
 
-def getWrapperData(wrapper_name,url=''):
+def getWrapperData(wrapper_name,maximum_data_count=100,url=''):
     try:
         create_directory()
     except PermissionDeniedError as e:
@@ -206,17 +206,17 @@ def getWrapperData(wrapper_name,url=''):
     if success:
         if(url == ''):
             url = wrapper_url
-            if(wrapper_type == 'table'):
-                all_tables = getTableWrapperData(url,base_path, next_path)
-            else:
-                all_tables = getGeneralWrapperData(url,base_path, next_path, parent_path, repeat)
+        if(wrapper_type == 'table'):
+            all_tables = getTableWrapperData(url,base_path, maximum_data_count, next_path)
+        else:
+            all_tables = getGeneralWrapperData(url,base_path, maximum_data_count, next_path, parent_path, repeat)
     else:
        return  success, base_path
 
     return  True, all_tables
 
 
-def getTableWrapperData(url,base_path, next_path):
+def getTableWrapperData(url,base_path, maximum_data_count, next_path):
     all_tables = []
     try:
         service = Service(executable_path=ChromeDriverManager().install())
@@ -254,6 +254,9 @@ def getTableWrapperData(url,base_path, next_path):
             if(next_path == ''):
                 break
 
+            if len(all_tables) >= maximum_data_count:
+                break
+
             anchor_xpath = next_path
             driver.implicitly_wait(5)
             anchor_element = driver.find_element(By.XPATH,anchor_xpath)
@@ -268,7 +271,7 @@ def getTableWrapperData(url,base_path, next_path):
            
     return filter_duplicate_rows(all_tables)
 
-def getGeneralWrapperData(url, base_path, next_path, parent_path, repeat):
+def getGeneralWrapperData(url, base_path, maximum_data_count, next_path, parent_path, repeat):
     all_tables = []
     try:
         service = Service(executable_path=ChromeDriverManager().install())
@@ -294,9 +297,11 @@ def getGeneralWrapperData(url, base_path, next_path, parent_path, repeat):
                     if list_header_try == 0:
                         list_header.append(p['attribute_name'])
                     xpath_root = parent_path
-                    xpath_root = xpath_root.replace('.', '')
+                    xpath_root = xpath_root.replace('.', ' ')
+                    xpath_root = xpath_root.strip()
                     xpath_sub = p['attribute_value']
-                    xpath_sub = xpath_sub.replace('.', '')
+                    xpath_sub = xpath_sub.replace('.', ' ')
+                    xpath_sub = xpath_sub.strip()
                     path = "//*[@class='"+xpath_root+"']//*[@class='"+xpath_sub+"']"
                     elements = driver.find_elements(By.XPATH, path)
                     row_columns = []
@@ -310,7 +315,10 @@ def getGeneralWrapperData(url, base_path, next_path, parent_path, repeat):
 
                 list_header_try = list_header_try + 1
 
-                if(list_header_try == 6 or next_path == ''):
+                if(next_path == ''):
+                    break
+
+                if len(all_tables) >= maximum_data_count:
                     break
 
                 anchor_xpath = next_path
@@ -318,9 +326,6 @@ def getGeneralWrapperData(url, base_path, next_path, parent_path, repeat):
                 driver.execute_script("arguments[0].click();", anchor_element)
                 time.sleep(3)
             
-                
-            
-                
             all_tables.insert(0, list_header)      
         else:
             list_header_try = 0
@@ -338,7 +343,11 @@ def getGeneralWrapperData(url, base_path, next_path, parent_path, repeat):
                 all_tables.append(data_rows)
 
                 list_header_try = list_header_try + 1
-                if(list_header_try == 4):
+
+                if(next_path == ''):
+                    break
+                
+                if len(all_tables) >= maximum_data_count:
                     break
                 
                 anchor_xpath = next_path

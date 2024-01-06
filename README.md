@@ -9,6 +9,18 @@ Leveraging Selenium for web automation and BeautifulSoup for HTML parsing, the p
 data on web pages. With functions like setTableWrapper and setGeneralWrapper, users can define the structure of data extraction, while getWrapperData 
 facilitates the retrieval of data based on these wrappers. Additionally, the project offers functionality for listing existing wrappers with listWrappers. 
 Overall, the Web Wrapper Project serves as a versatile solution for simplifying web scraping workflows and enhancing data extraction efficiency in Python.
+
+
+
+**Important Note:**
+
+**1. The Select operation becomes functional exclusively upon the application of a right mouse click.**
+
+**2. Please make sure Chrome is installed on your machine.**
+
+
+
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -61,7 +73,7 @@ print(result)
 The setTableWrapper function returns a tuple with information about the operation:
 
 - **Success Flag (bool):** True if the operation was successful, False otherwise.
-- **Wrapper Name (string):** The name assigned to the wrapper, either custom or auto-generated.
+- **Wrapper Name (string):** The name assigned to the wrapper, either custom or auto-generated. None if unsuccessful.
 - **Error Code (int or None):** If unsuccessful, an error code indicating the nature of the failure. None if successful.
 - **Error Type (string or None):** The type of the raised exception (if any). None if successful.
 - **Error Message (string or None):** A descriptive error message (if any). None if successful.
@@ -95,7 +107,7 @@ print(result)
 
 The setGeneralWrapper function returns a tuple with information about the operation:
 
-- **Success Flag (bool):** True if the operation was successful, False otherwise.
+- **Success Flag (bool):** True if the operation was successful, False otherwise. None if unsuccessful.
 - **Wrapper Name (string):** The name assigned to the wrapper, either custom or auto-generated.
 - **Error Code (int or None):** If unsuccessful, an error code indicating the nature of the failure. None if successful.
 - **Error Type (string or None):** The type of the raised exception (if any). None if successful.
@@ -116,13 +128,14 @@ To retrieve data from a previously set up wrapper, use the getWrapperData functi
 #### Function Input:
 
 - **Wrapper Name (string):** The name of the wrapper from which to retrieve data.
+- **Maximum Data Count:** The number of rows(Default value 100).
 - **URL (string, optional):** The URL of the web page. If not provided, the URL from the original wrapper setup will be used.
 
 ```python
 from web_wrapper_project import getWrapperData
 
 # Example: Getting data from the wrapper named "my_table_wrapper"
-result = getWrapperData("my_table_wrapper", url="https://example.com")
+result = getWrapperData("my_table_wrapper", 200, url="https://example.com")
 print(result)
 ```
 

@@ -14,7 +14,7 @@ var basePanelTemplate = `
     <div class="st-actionContainer left-bottom">
 	<div class="st-panel">
 		<div class="st-panel-header"><i class="fa fa-bars" aria-hidden="true"></i> Wrapper Generation Panel - <b>Table</b></div>
-		<div class="st-panel-contents">
+		<div class="st-panel-contents" style="text-align:center;">
 			
                         <button style="background-color: #dc3545 !important;margin-top:5px;" id="st_click" class="st_click" class="doneBtn" >Select Table</button>
                         
@@ -24,7 +24,7 @@ var basePanelTemplate = `
 
                         <br>
 		</div>
-		<div class="grid">
+		<div class="grid" style="text-align:center;">
                     
                     <button  style="cursor:pointer; width: 200px !important;background-color: #ccc !important;" class="doneBtn" >Done</button>
 				
@@ -178,7 +178,6 @@ $(".st-actionContainer").on("click", ".doneBtn", function(event) {
             text: "Please select which table you want to scrape."
         });
     }else{
-        move_for = 0;
         next_path = next_path.trim();
         if(next_path == ''){
             Swal.fire({
@@ -194,21 +193,24 @@ $(".st-actionContainer").on("click", ".doneBtn", function(event) {
                 if (result.isConfirmed) {
                   
                 }else{
-                    move_for = 1;
+                    dofinalOperation();
                 }
               });
             
         }else{
-           move_for = 1; 
-        }
-        if(move_for == 1){
-            var fieldValue = {
-                    table_path: table_path,
-                    next_path: next_path
-                };
-            window.inputFieldValues = []
-            window.inputFieldValues.push(fieldValue);
-            window.userTasksCompleted = true;
+           dofinalOperation();
         }
     }
 });
+
+function dofinalOperation(){ 
+
+    var fieldValue = {
+            table_path: table_path,
+            next_path: next_path
+        };
+    window.inputFieldValues = []
+    window.inputFieldValues.push(fieldValue);
+    window.userTasksCompleted = true;
+    
+}

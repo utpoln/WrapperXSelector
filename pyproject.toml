@@ -1,6 +1,6 @@
 [project]
 name = "WrapperXSelector"
-version = "0.1.30"
+version = "0.1.39"
 authors = [
   { name="Kallol Naha", email="kallolnaha@gmail.com" },
 ]
@@ -10,9 +10,9 @@ dependencies = [
     'beautifulsoup4'
 ]
 keywords = ["Scraping", "Xpath", 'Wrapper']
-description = "The WrapperXSelector is a Python-based tool that streamlines web scraping and data extraction tasks through the creation and utilization of wrappers."
+description = "The WrapperXSelector[Crow] is a Python-based tool that streamlines web scraping and data extraction tasks through the creation and utilization of wrappers."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

@@ -38,6 +38,7 @@ div.st-actionContainer li{
 div.st-panel{
 	font-family: Roboto;
 	font-size: 15px;
+        max-width: 500px !important;
 
 }
 
@@ -119,10 +120,12 @@ div.st-panel{
 
 /*option grid in panel*/
 
-.grid {
+.st-actionContainer .grid {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
+        max-width: none !important;
+        min-width: 0;
 }
 
 .gridChild {

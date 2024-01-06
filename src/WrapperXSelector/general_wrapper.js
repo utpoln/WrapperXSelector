@@ -49,7 +49,7 @@ var basePanelTemplate = `
                 
 			
 		</div>
-		<div class="grid">
+		<div class="grid"  style="text-align:center;">
 
                     <button  style="cursor:pointer; width: 250px !important;background-color: #ccc !important;" class="doneBtn" >Done</button>
 				
